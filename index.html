@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Unidades de Concentración</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #fff3f4;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #9b59b6;
+            color: #fff;
+            border-radius: 0 0 20px 20px;
+            padding: 20px;
+        }
+        h1 {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #ff4081;
+            border-color: #ff4081;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        .btn-primary:hover {
+            background-color: #e91e63;
+            border-color: #e91e63;
+        }
+        .btn-secondary {
+            background-color: #4caf50;
+            border-color: #4caf50;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+        .form-control {
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        footer {
+            background-color: #9b59b6;
+            color: #fff;
+            padding: 10px 0;
+            border-radius: 20px 20px 0 0;
+        }
+        #resultado {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            font-weight: bold;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            width: 150px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <header class="text-center">
+        <h1>Calculadora de Unidades de Concentración</h1>
+        <p>Resuelve y comprende las unidades de %m/v, %m/m, %v/v y más</p>
+    </header>
+
+    <main class="container my-5">
+        <section id="calculadoras">
+            <div class="image-container">
+                <img src="calculadora.png" alt="Ilustración de calculadora y matraces">
+            </div>
+            <h2 class="text-center mb-4">Calculadora %m/v</h2>
+            <p class="text-center">Ingresa los valores y calcula el resultado</p>
+
+            <div class="mb-3">
+                <label for="masa" class="form-label">Gramos de soluto (g):</label>
+                <input type="number" id="masa" class="form-control" placeholder="Introduce gramos de soluto">
+            </div>
+
+            <div class="mb-3">
+                <label for="volumen" class="form-label">Mililitros de solución (mL):</label>
+                <input type="number" id="volumen" class="form-control" placeholder="Introduce volumen de solución">
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary mb-3" onclick="calcularMasaVolumen()">Calcular</button>
+                <button class="btn btn-secondary mb-3" onclick="borrarCampos()">Borrar</button>
+            </div>
+
+            <div id="resultado" class="text-center d-none"></div>
+        </section>
+
+        <section id="ejemplos" class="mt-5">
+            <h2 class="text-center mb-4">Ejemplo Resuelto</h2>
+            <div class="text-center">
+                <p>Un laboratorio prepara una solución disolviendo <strong>5 g</strong> de sal (NaCl) en suficiente agua para completar un volumen total de <strong>100 ml</strong>. Calcule el %m/v de la solución.</p>
+                <p><strong>Solución:</strong> %m/v = (masa/volumen) * 100 = (5 / 100) * 100 = <strong>5%</strong>.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center">
+        <p>&copy; 2024 Calculadora de Unidades de Concentración</p>
+    </footer>
+
+    <script>
+        function calcularMasaVolumen() {
+            const masa = parseFloat(document.getElementById('masa').value);
+            const volumen = parseFloat(document.getElementById('volumen').value);
+
+            const resultadoDiv = document.getElementById('resultado');
+            if (!isNaN(masa) && !isNaN(volumen) && volumen > 0) {
+                const resultado = (masa / volumen) * 100;
+                resultadoDiv.textContent = `%m/v: ${resultado.toFixed(2)}%`;
+                resultadoDiv.classList.remove('d-none');
+            } else {
+                resultadoDiv.textContent = 'Por favor, introduce valores válidos para masa y volumen.';
+                resultadoDiv.classList.remove('d-none');
+            }
+        }
+
+        function borrarCampos() {
+            document.getElementById('masa').value = '';
+            document.getElementById('volumen').value = '';
+            document.getElementById('resultado').classList.add('d-none');
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
