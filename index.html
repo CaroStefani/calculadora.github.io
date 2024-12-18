@@ -1,494 +1,670 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Calculadora de Concentraciones Químicas</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #FFFFFF; /* Fondo blanco */
-    color: #333;
-    text-align: center;
-  }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de Concentraciones para Todos</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif; /* Fuente amigable */
+      margin: 20px;
+      background-color: #f0f8ff; /* Fondo azul claro suave */
+      color: #333;
+      text-align: center;
+    }
 
-  h1, h2, h3, h4, h5 {
-    margin-top: 0.5em;
-    color: #333;
-  }
+    h1, h2, h3, h4, h5 {
+      margin-top: 0.5em;
+      color: #333;
+    }
 
-  label {
-    display: block;
-    margin-top: 5px;
-    font-weight: bold;
-    text-align: left; /* Mantener labels alineados a la izquierda */
-  }
+    /* Estilo para las secciones con bordes redondeados y colores pastel */
+    .section {
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
+      background: #fff;
+      max-width: 500px;
+      text-align: left;
+      box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+    }
 
-  input, select, button {
-    margin-top: 5px;
-    padding: 5px;
-    width: 100%;
-    max-width: 250px;
-    box-sizing: border-box;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-  }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-  button {
-    width: auto;
-    cursor: pointer;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    margin-top:10px;
-  }
+    input, select, button {
+      margin-top: 5px;
+      padding: 8px;
+      width: 100%;
+      max-width: 300px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
 
-  .section {
-    margin: 10px auto; /* Menos margen, centrado */
-    padding: 10px; /* Menos padding */
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    max-width: 400px; /* Limitar el ancho para que se vea más compacto */
-    text-align: left; /* Contenido alineado a la izquierda */
-  }
+    button {
+      width: auto;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      transition: background-color 0.3s;
+    }
 
-  .section h5 {
-    text-align: center; /* Títulos centrados */
-  }
+    button:hover {
+      background-color: #45a049;
+    }
 
-  .green-box {
-    background: #ddffdd;
-  }
+    .result {
+      background: #e0f7fa; /* Azul pastel */
+      border: 2px solid #81d4fa;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      text-align:center;
+      font-size: 1.2em;
+    }
 
-  .blue-box {
-    background: #ddeeff;
-  }
+    .history {
+      list-style: none;
+      padding: 0;
+    }
 
-  .yellow-box {
-    background: #fffadd;
-  }
+    .history li {
+      background: #fff9c4; /* Amarillo pastel */
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #fdd835;
+      text-align:center;
+      font-size: 0.9em;
+    }
 
-  .pink-box {
-    background: #ffe4e1;
-  }
+    .conversion-panel {
+      margin-top: 20px;
+    }
 
-  .result {
-    background: #ddffdd; /* Verde pastel */
-    border: 1px solid #b3d7ff;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    text-align:center;
-  }
+    .tutorial-step {
+      background: #f1f8e9; /* Verde claro */
+      border: 1px solid #c5e1a5;
+      margin-bottom:10px;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 0.95em;
+    }
 
-  .history {
-    list-style: none;
-    padding: 0;
-  }
+    .flex-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
 
-  .history li {
-    background: #FFFADD; /* Amarillo pastel */
-    margin-bottom: 5px;
-    padding: 5px; /* Menos padding */
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    text-align:center;
-  }
+    .footer-message {
+      margin-top: 30px;
+      text-align: center;
+      color: #555;
+      font-style: italic;
+    }
 
-  .conversion-panel {
-    margin-top: 10px;
-  }
+    /* Tooltip container */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+      color: #2196F3;
+      margin-left: 5px;
+    }
 
-  .tutorial-step {
-    background: #fff;
-    border: 1px solid #ccc;
-    margin-bottom:5px;
-    padding: 5px;
-    border-radius: 3px;
-  }
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 220px;
+      background-color: #555;
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 10px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%; /* Position above */
+      left: 50%;
+      margin-left: -110px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
 
-  .flex-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px; /* menos espacio */
-    justify-content: center; /* Centrar elementos */
-  }
+    /* Tooltip arrow */
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%; /* At the bottom of tooltip */
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
 
-  .footer-message {
-    margin-top: 20px;
-    text-align: center;
-    color: #333;
-    font-style: italic;
-  }
-</style>
+    /* Show tooltip on hover */
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-<h1>Calculadora de Concentraciones Químicas</h1>
+  <h1>🧪 Calculadora de Concentraciones para Todos 🧪</h1>
 
-<div class="section blue-box">
-  <label for="calcType" style="text-align:center;">Seleccione el tipo de cálculo:</label>
-  <select id="calcType" style="margin: 0 auto; display:block;">
-    <option value="percent_m_m">% m/m (Porcentaje masa/masa)</option>
-    <option value="percent_m_v">% m/v (Porcentaje masa/volumen)</option>
-    <option value="percent_v_v">% v/v (Porcentaje volumen/volumen)</option>
-    <option value="ppm">PPM (Partes por millón)</option>
-    <option value="molarity">M (Molaridad)</option>
-    <option value="normality">N (Normalidad)</option>
-    <option value="mole_fraction">X (Fracción molar)</option>
-  </select>
-</div>
-
-<div id="tutorial" class="section green-box" style="max-width:400px; margin:10px auto;"></div>
-
-<h5>Datos de entrada</h5>
-<div id="inputFields" class="section pink-box"></div>
-
-<button id="calcButton">Calcular</button>
-
-<div id="resultContainer" style="max-width:400px; margin:10px auto;"></div>
-
-<div class="section yellow-box conversion-panel" style="max-width:400px; margin:10px auto;">
-  <h5>Conversión de Unidades</h5>
-  <div class="flex-row">
-    <div>
-      <label>Valor:</label>
-      <input type="number" id="convertValue" placeholder="Valor"/>
-    </div>
-    <div>
-      <label>De:</label>
-      <select id="fromUnit">
-        <option>gramos (g)</option>
-        <option>kilogramos (kg)</option>
-        <option>litros (L)</option>
-        <option>mililitros (mL)</option>
-      </select>
-    </div>
-    <div>
-      <label>A:</label>
-      <select id="toUnit">
-        <option>gramos (g)</option>
-        <option>kilogramos (kg)</option>
-        <option>litros (L)</option>
-        <option>mililitros (mL)</option>
-      </select>
-    </div>
+  <!-- Sección para seleccionar el tipo de cálculo con icono y explicación -->
+  <div class="section">
+    <label for="calcType">🔍 <strong>¿Qué quieres calcular?</strong>
+      <span class="tooltip">❓
+        <span class="tooltiptext">
+          Selecciona el tipo de concentración que deseas calcular. Cada tipo tiene una fórmula diferente con ejemplos prácticos.
+        </span>
+      </span>
+    </label>
+    <select id="calcType" aria-label="Tipo de cálculo">
+      <option value="percent_m_m">% m/m (Porcentaje masa/masa)</option>
+      <option value="percent_m_v">% m/v (Porcentaje masa/volumen)</option>
+      <option value="percent_v_v">% v/v (Porcentaje volumen/volumen)</option>
+      <option value="ppm">PPM (Partes por millón)</option>
+      <option value="molarity">M (Molaridad)</option>
+      <option value="normality">N (Normalidad)</option>
+      <option value="mole_fraction">X (Fracción molar)</option>
+    </select>
   </div>
-  <button id="convertButton">Convertir</button>
-  <div id="conversionResult" style="text-align:center; margin-top:10px;"></div>
-</div>
 
-<h5 style="margin:10px;">Último cálculo realizado</h5>
-<ul class="history" id="historyList" style="max-width:400px; margin:10px auto;"></ul>
+  <!-- Sección de tutorial interactivo -->
+  <div id="tutorial" class="section" aria-live="polite">
+    <!-- Los pasos del tutorial se agregarán aquí dinámicamente -->
+  </div>
 
-<p class="footer-message">Trabajo desarrollado por Daniela Torreblanca y Carlolina Martínez</p>
+  <h2>📥 Datos de Entrada 📥</h2>
+  <div id="inputFields" class="section">
+    <!-- Los campos de entrada se agregarán aquí dinámicamente -->
+  </div>
 
-<script>
-// Tutoriales para cada tipo de cálculo
-const tutorialSteps = {
-  "percent_m_m": [
-    "Seleccionar % m/m.",
-    "Ingrese la masa del soluto (g) y la masa total (g).",
-    "Fórmula: (masa soluto / masa total)*100."
-  ],
-  "percent_m_v": [
-    "Seleccionar % m/v.",
-    "Ingrese la masa del soluto (g) y el volumen de la solución (mL).",
-    "Fórmula: %m/v = (masa soluto (g)/volumen disolución (mL))*100%."
-  ],
-  "percent_v_v": [
-    "Seleccionar % v/v.",
-    "Ingrese volumen del soluto y volumen total.",
-    "Fórmula: (volumen soluto / volumen total)*100."
-  ],
-  "ppm": [
-    "Seleccionar PPM.",
-    "Ingrese la masa del soluto (g) y la masa total (g).",
-    "Fórmula: (masa soluto/masa total)*10^6."
-  ],
-  "molarity": [
-    "Seleccionar Molaridad (M).",
-    "Ingrese moles de soluto (mol) y volumen de la solución (L).",
-    "Fórmula: M = moles de soluto / L disolución."
-  ],
-  "normality": [
-    "Seleccionar Normalidad (N).",
-    "Ingrese equivalentes del soluto y volumen (L) de la solución.",
-    "Fórmula: N = equivalentes soluto / L solución."
-  ],
-  "mole_fraction": [
-    "Seleccionar Fracción molar (X).",
-    "Ingrese moles soluto y moles solvente.",
-    "X = moles soluto / (moles soluto + moles solvente)."
-  ]
-};
+  <button id="calcButton">✅ ¡Calcular!</button>
 
-// Opciones de input dinámico según el tipo de cálculo
-function getInputFields(type) {
-  switch(type) {
-    case "percent_m_m":
-      return `
-        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
-        <label>Masa total de la solución (g): <input type="number" id="massTotal" /></label>
-      `;
-    case "percent_m_v":
-      return `
-        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
-        <label>Volumen de la solución (mL): <input type="number" id="volumeSolution" /></label>
-      `;
-    case "percent_v_v":
-      return `
-        <label>Volumen del soluto: <input type="number" id="volumeSoluto" /></label>
-        <label>Volumen total de la solución: <input type="number" id="volumeTotal" /></label>
-      `;
-    case "ppm":
-      return `
-        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
-        <label>Masa total (g): <input type="number" id="massTotal" /></label>
-      `;
-    case "molarity":
-      return `
-        <label>Moles de soluto (mol): <input type="number" id="molesSoluto" /></label>
-        <label>Volumen de la solución (L): <input type="number" id="volumeSolution" /></label>
-      `;
-    case "normality":
-      return `
-        <label>Equivalentes del soluto: <input type="number" id="equivalentes" /></label>
-        <label>Volumen de la solución (L): <input type="number" id="volumeSolution" /></label>
-      `;
-    case "mole_fraction":
-      return `
-        <label>Moles de soluto (mol): <input type="number" id="molesSoluto" /></label>
-        <label>Moles de solvente (mol): <input type="number" id="molesSolvente" /></label>
-      `;
-    default:
-      return "";
-  }
-}
+  <!-- Contenedor para mostrar el resultado -->
+  <div id="resultContainer"></div>
 
-// Cálculos
-function calculate(type, inputs) {
-  let result = null;
-  let explanation = "";
-  const n = Number;
+  <!-- Panel de conversión de unidades -->
+  <div class="section conversion-panel">
+    <h2>🔄 Conversión de Unidades 🔄</h2>
+    <div class="flex-row">
+      <div>
+        <label for="convertValue">📏 Valor:
+          <span class="tooltip">❓
+            <span class="tooltiptext">
+              Ingresa el número que deseas convertir de una unidad a otra.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="convertValue" placeholder="Ingresa un número"/>
+      </div>
+      <div>
+        <label for="fromUnit">🔀 De:
+          <span class="tooltip">❓
+            <span class="tooltiptext">
+              Selecciona la unidad actual del valor que deseas convertir.
+            </span>
+          </span>
+        </label>
+        <select id="fromUnit">
+          <option>gramos (g)</option>
+          <option>kilogramos (kg)</option>
+          <option>litros (L)</option>
+          <option>mililitros (mL)</option>
+        </select>
+      </div>
+      <div>
+        <label for="toUnit">➡️ A:
+          <span class="tooltip">❓
+            <span class="tooltiptext">
+              Selecciona la unidad a la que deseas convertir el valor.
+            </span>
+          </span>
+        </label>
+        <select id="toUnit">
+          <option>gramos (g)</option>
+          <option>kilogramos (kg)</option>
+          <option>litros (L)</option>
+          <option>mililitros (mL)</option>
+        </select>
+      </div>
+    </div>
+    <button id="convertButton">🔄 Convertir</button>
+    <div id="conversionResult" class="result"></div>
+  </div>
 
-  switch(type) {
-    case "percent_m_m":
-      if (inputs.massSoluto && inputs.massTotal) {
-        const val = (n(inputs.massSoluto)/n(inputs.massTotal))*100;
-        result = val.toFixed(4) + " % m/m";
-        explanation = "Porcentaje masa/masa = (masa soluto / masa total)*100.";
+  <h2>🕒 Último Cálculo Realizado 🕒</h2>
+  <ul class="history" id="historyList">
+    <!-- Historial se mostrará aquí -->
+  </ul>
+
+  <p class="footer-message">✨ Creado con amor por Daniela Torreblanca y Carolina Martínez ✨</p>
+
+  <script>
+    // Tutoriales simplificados con ejemplos prácticos para cada tipo de cálculo
+    const tutorialSteps = {
+      "percent_m_m": [
+        "1️⃣ Selecciona % m/m.",
+        "2️⃣ Escribe cuánto pesa la sustancia que estás usando (en gramos).",
+        "3️⃣ Escribe el peso total de la solución (en gramos).",
+        "💡 **Ejemplo:** Si tienes 30 gramos de cacao en 100 gramos de chocolate, el % m/m de cacao es (30/100) × 100 = 30%."
+      ],
+      "percent_m_v": [
+        "1️⃣ Selecciona % m/v.",
+        "2️⃣ Escribe cuánto pesa la sustancia (en gramos).",
+        "3️⃣ Escribe el volumen de la solución (en mililitros).",
+        "💡 **Ejemplo:** Si disuelves 10 gramos de azúcar en 100 mililitros de agua, el % m/v de azúcar es (10/100) × 100 = 10%."
+      ],
+      "percent_v_v": [
+        "1️⃣ Selecciona % v/v.",
+        "2️⃣ Escribe el volumen de la sustancia (en mililitros).",
+        "3️⃣ Escribe el volumen total de la solución (en mililitros).",
+        "💡 **Ejemplo:** Si mezclas 50 mL de jugo de naranja con 150 mL de agua, el % v/v de jugo es (50/200) × 100 = 25%."
+      ],
+      "ppm": [
+        "1️⃣ Selecciona PPM.",
+        "2️⃣ Escribe cuánto pesa la sustancia (en gramos).",
+        "3️⃣ Escribe el peso total de la solución (en gramos).",
+        "💡 **Ejemplo:** Si tienes 0.05 gramos de contaminante en 1000 gramos de agua, el PPM es (0.05/1000) × 1,000,000 = 50 ppm."
+      ],
+      "molarity": [
+        "1️⃣ Selecciona Molaridad (M).",
+        "2️⃣ Escribe los moles de la sustancia.",
+        "3️⃣ Escribe el volumen de la solución (en litros).",
+        "💡 **Ejemplo:** Si disuelves 1 mol de sal en 2 litros de agua, la molaridad es 1/2 = 0.5 M."
+      ],
+      "normality": [
+        "1️⃣ Selecciona Normalidad (N).",
+        "2️⃣ Escribe los equivalentes de la sustancia.",
+        "3️⃣ Escribe el volumen de la solución (en litros).",
+        "💡 **Ejemplo:** Si tienes 1 equivalente de ácido en 1 litro de solución, la normalidad es 1 N."
+      ],
+      "mole_fraction": [
+        "1️⃣ Selecciona Fracción molar (X).",
+        "2️⃣ Escribe los moles de la sustancia.",
+        "3️⃣ Escribe los moles del solvente.",
+        "💡 **Ejemplo:** Si tienes 1 mol de alcohol y 9 moles de agua, la fracción molar del alcohol es 1 / (1 + 9) = 0.1."
+      ]
+    };
+
+    // Campos de entrada dinámicos según el tipo de cálculo con ejemplos prácticos
+    function getInputFields(type) {
+      switch(type) {
+        case "percent_m_m":
+          return `
+            <label for="massSoluto">🧴 Masa de la sustancia (g):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el peso de la sustancia que estás usando. <br>**Ejemplo:** 30 gramos de cacao.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="massSoluto" placeholder="Ej: 30"/>
+            <label for="massTotal">⚖️ Masa total de la solución (g):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el peso total de la solución. <br>**Ejemplo:** 100 gramos de chocolate.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="massTotal" placeholder="Ej: 100"/>
+          `;
+        case "percent_m_v":
+          return `
+            <label for="massSoluto">🧴 Masa de la sustancia (g):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el peso de la sustancia que estás disolviendo. <br>**Ejemplo:** 10 gramos de azúcar.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="massSoluto" placeholder="Ej: 10"/>
+            <label for="volumeSolution">💧 Volumen de la solución (mL):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el volumen total de la solución. <br>**Ejemplo:** 100 mililitros de agua.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="volumeSolution" placeholder="Ej: 100"/>
+          `;
+        case "percent_v_v":
+          return `
+            <label for="volumeSoluto">💧 Volumen de la sustancia (mL):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el volumen de la sustancia que estás mezclando. <br>**Ejemplo:** 50 mL de jugo de naranja.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="volumeSoluto" placeholder="Ej: 50"/>
+            <label for="volumeTotal">💧 Volumen total de la solución (mL):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el volumen total de la solución. <br>**Ejemplo:** 200 mililitros de mezcla.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="volumeTotal" placeholder="Ej: 200"/>
+          `;
+        case "ppm":
+          return `
+            <label for="massSoluto">🧴 Masa de la sustancia (g):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el peso de la sustancia en partes por millón. <br>**Ejemplo:** 0.05 gramos de contaminante.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="massSoluto" placeholder="Ej: 0.05"/>
+            <label for="massTotal">⚖️ Masa total de la solución (g):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el peso total de la solución. <br>**Ejemplo:** 1000 gramos de agua.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="massTotal" placeholder="Ej: 1000"/>
+          `;
+        case "molarity":
+          return `
+            <label for="molesSoluto">🔬 Moles de la sustancia (mol):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa la cantidad de moles de la sustancia. <br>**Ejemplo:** 1 mol de sal.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="molesSoluto" placeholder="Ej: 1"/>
+            <label for="volumeSolution">💧 Volumen de la solución (L):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el volumen total de la solución en litros. <br>**Ejemplo:** 2 litros de agua.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="volumeSolution" placeholder="Ej: 2"/>
+          `;
+        case "normality":
+          return `
+            <label for="equivalentes">🔬 Equivalentes de la sustancia:
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa los equivalentes de la sustancia. <br>**Ejemplo:** 1 equivalente de ácido.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="equivalentes" placeholder="Ej: 1"/>
+            <label for="volumeSolution">💧 Volumen de la solución (L):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa el volumen total de la solución en litros. <br>**Ejemplo:** 1 litro de solución.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="volumeSolution" placeholder="Ej: 1"/>
+          `;
+        case "mole_fraction":
+          return `
+            <label for="molesSoluto">🔬 Moles de la sustancia (mol):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa la cantidad de moles de la sustancia. <br>**Ejemplo:** 1 mol de alcohol.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="molesSoluto" placeholder="Ej: 1"/>
+            <label for="molesSolvente">🔬 Moles del solvente (mol):
+              <span class="tooltip">❓
+                <span class="tooltiptext">
+                  Ingresa la cantidad de moles del solvente. <br>**Ejemplo:** 9 moles de agua.
+                </span>
+              </span>
+            </label>
+            <input type="number" id="molesSolvente" placeholder="Ej: 9"/>
+          `;
+        default:
+          return "";
       }
-      break;
-    case "percent_m_v":
-      if (inputs.massSoluto && inputs.volumeSolution) {
-        const val = (n(inputs.massSoluto)/n(inputs.volumeSolution))*100;
-        result = val.toFixed(4) + " % m/v";
-        explanation = "% m/v = (g soluto/mL solución)*100.";
-      }
-      break;
-    case "percent_v_v":
-      if (inputs.volumeSoluto && inputs.volumeTotal) {
-        const val = (n(inputs.volumeSoluto)/n(inputs.volumeTotal))*100;
-        result = val.toFixed(4) + " % v/v";
-        explanation = "% v/v = (volumen soluto/volumen total)*100.";
-      }
-      break;
-    case "ppm":
-      if (inputs.massSoluto && inputs.massTotal) {
-        const val = (n(inputs.massSoluto)/n(inputs.massTotal))*1_000_000;
-        result = val.toFixed(4) + " ppm";
-        explanation = "PPM = (masa soluto/masa total)*10^6.";
-      }
-      break;
-    case "molarity":
-      if (inputs.molesSoluto && inputs.volumeSolution) {
-        const val = n(inputs.molesSoluto)/n(inputs.volumeSolution);
-        result = val.toFixed(4) + " M";
-        explanation = "M = moles de soluto / L disolución.";
-      }
-      break;
-    case "normality":
-      if (inputs.equivalentes && inputs.volumeSolution) {
-        const val = n(inputs.equivalentes)/n(inputs.volumeSolution);
-        result = val.toFixed(4) + " N";
-        explanation = "N = equivalentes soluto / L solución.";
-      }
-      break;
-    case "mole_fraction":
-      if (inputs.molesSoluto && inputs.molesSolvente) {
-        const val = n(inputs.molesSoluto)/(n(inputs.molesSoluto)+n(inputs.molesSolvente));
-        result = val.toFixed(4);
-        explanation = "Fracción molar = moles soluto/(moles soluto + moles solvente).";
-      }
-      break;
-  }
-
-  return {result, explanation};
-}
-
-// Manejo de historial en localStorage
-function loadHistory() {
-  let hist = localStorage.getItem("lastCalculation");
-  return hist ? JSON.parse(hist) : null;
-}
-
-function saveHistory(entry) {
-  // Guardamos sólo el último cálculo
-  localStorage.setItem("lastCalculation", JSON.stringify(entry));
-}
-
-function updateHistoryUI() {
-  const h = loadHistory();
-  const list = document.getElementById("historyList");
-  list.innerHTML = "";
-  if (h) {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${getCalcLabel(h.type)}</strong> (${h.date})<br>Inputs: ${JSON.stringify(h.inputs)}<br>Resultado: ${h.result}`;
-    list.appendChild(li);
-  }
-}
-
-function getCalcLabel(type) {
-  const labels = {
-    "percent_m_m": "% m/m",
-    "percent_m_v": "% m/v",
-    "percent_v_v": "% v/v",
-    "ppm": "PPM",
-    "molarity": "M",
-    "normality": "N",
-    "mole_fraction": "X (Fracción molar)"
-  };
-  return labels[type] || type;
-}
-
-function showTutorial(type) {
-  const container = document.getElementById("tutorial");
-  container.innerHTML = "";
-  if (tutorialSteps[type]) {
-    if (tutorialSteps[type].length > 0) {
-      const title = document.createElement("h5");
-      title.textContent = "Tutorial Interactivo";
-      title.style.textAlign = "center";
-      container.appendChild(title);
     }
-    tutorialSteps[type].forEach((step, i) => {
-      const div = document.createElement("div");
-      div.className = "tutorial-step";
-      div.textContent = "Paso " + (i+1) + ": " + step;
-      container.appendChild(div);
-    });
-  }
-}
 
-// Manejo de conversión simple
-function convertUnits(val, fromU, toU) {
-  let number = parseFloat(val);
-  if (isNaN(number)) return null;
+    // Función para realizar los cálculos con explicaciones prácticas
+    function calculate(type, inputs) {
+      let result = null;
+      let explanation = "";
+      const n = Number;
 
-  if (fromU.includes("kilogramos")) {
-    number = number * 1000; // a g
-  } else if (fromU.includes("gramos")) {
-    // ya está en g
-  } else if (fromU.includes("litros")) {
-    // ya está en L
-  } else if (fromU.includes("mililitros")) {
-    number = number / 1000; // a L
-  }
+      switch(type) {
+        case "percent_m_m":
+          if (inputs.massSoluto && inputs.massTotal) {
+            const val = (n(inputs.massSoluto)/n(inputs.massTotal))*100;
+            result = val.toFixed(2) + " % m/m";
+            explanation = "Porcentaje masa/masa = (masa de la sustancia / masa total) × 100.";
+          }
+          break;
+        case "percent_m_v":
+          if (inputs.massSoluto && inputs.volumeSolution) {
+            const val = (n(inputs.massSoluto)/n(inputs.volumeSolution))*100;
+            result = val.toFixed(2) + " % m/v";
+            explanation = "Porcentaje masa/volumen = (masa de la sustancia / volumen de la solución) × 100.";
+          }
+          break;
+        case "percent_v_v":
+          if (inputs.volumeSoluto && inputs.volumeTotal) {
+            const val = (n(inputs.volumeSoluto)/n(inputs.volumeTotal))*100;
+            result = val.toFixed(2) + " % v/v";
+            explanation = "Porcentaje volumen/volumen = (volumen de la sustancia / volumen total) × 100.";
+          }
+          break;
+        case "ppm":
+          if (inputs.massSoluto && inputs.massTotal) {
+            const val = (n(inputs.massSoluto)/n(inputs.massTotal))*1_000_000;
+            result = val.toFixed(2) + " ppm";
+            explanation = "PPM = (masa de la sustancia / masa total) × 1,000,000.";
+          }
+          break;
+        case "molarity":
+          if (inputs.molesSoluto && inputs.volumeSolution) {
+            const val = n(inputs.molesSoluto)/n(inputs.volumeSolution);
+            result = val.toFixed(2) + " M";
+            explanation = "Molaridad (M) = moles de la sustancia / volumen de la solución (L).";
+          }
+          break;
+        case "normality":
+          if (inputs.equivalentes && inputs.volumeSolution) {
+            const val = n(inputs.equivalentes)/n(inputs.volumeSolution);
+            result = val.toFixed(2) + " N";
+            explanation = "Normalidad (N) = equivalentes de la sustancia / volumen de la solución (L).";
+          }
+          break;
+        case "mole_fraction":
+          if (inputs.molesSoluto && inputs.molesSolvente) {
+            const val = n(inputs.molesSoluto)/(n(inputs.molesSoluto)+n(inputs.molesSolvente));
+            result = val.toFixed(4);
+            explanation = "Fracción molar (X) = moles de la sustancia / (moles de la sustancia + moles del solvente).";
+          }
+          break;
+      }
 
-  if (toU.includes("kilogramos")) {
-    if (fromU.includes("litros") || fromU.includes("mililitros")) {
-      return "Conversión no definida entre volumen y masa sin densidad";
+      return {result, explanation};
     }
-    number = number / 1000; // g a kg
-  } else if (toU.includes("gramos")) {
-    if (fromU.includes("litros") || fromU.includes("mililitros")) {
-      return "Conversión no definida entre volumen y masa sin densidad";
+
+    // Manejo de historial en localStorage
+    function loadHistory() {
+      let hist = localStorage.getItem("lastCalculation");
+      return hist ? JSON.parse(hist) : null;
     }
-    // ya es g
-  } else if (toU.includes("litros")) {
-    if (fromU.includes("gramos") || fromU.includes("kilogramos")) {
-      return "Conversión no definida entre masa y volumen sin densidad";
+
+    function saveHistory(entry) {
+      // Guardamos sólo el último cálculo
+      localStorage.setItem("lastCalculation", JSON.stringify(entry));
     }
-    // ya es L
-  } else if (toU.includes("mililitros")) {
-    if (fromU.includes("gramos") || fromU.includes("kilogramos")) {
-      return "Conversión no definida entre masa y volumen sin densidad";
+
+    function updateHistoryUI() {
+      const h = loadHistory();
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      if (h) {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${getCalcLabel(h.type)}</strong> (${h.date})<br><em>Entradas:</em> ${formatInputs(h.inputs)}<br><em>Resultado:</em> ${h.result}`;
+        list.appendChild(li);
+      }
     }
-    number = number * 1000; // L a mL
-  }
 
-  return number;
-}
-
-
-// Inicialización
-document.addEventListener("DOMContentLoaded", () => {
-  const calcTypeSelect = document.getElementById("calcType");
-  const inputFieldsContainer = document.getElementById("inputFields");
-  const calcButton = document.getElementById("calcButton");
-  const resultContainer = document.getElementById("resultContainer");
-  const convertButton = document.getElementById("convertButton");
-
-  function updateUI() {
-    const type = calcTypeSelect.value;
-    inputFieldsContainer.innerHTML = getInputFields(type);
-    showTutorial(type);
-    resultContainer.innerHTML = "";
-  }
-
-  calcTypeSelect.addEventListener("change", updateUI);
-
-  calcButton.addEventListener("click", () => {
-    const type = calcTypeSelect.value;
-    // Tomar inputs
-    const inputs = {};
-    const fields = inputFieldsContainer.querySelectorAll("input");
-    fields.forEach(f => {
-      inputs[f.id] = f.value;
-    });
-
-    const {result, explanation} = calculate(type, inputs);
-    if (result) {
-      resultContainer.innerHTML = `
-        <div class="result">
-          <h5>Resultado</h5>
-          <p>${result}</p>
-          <p><b>Explicación:</b> ${explanation}</p>
-        </div>
-      `;
-      const entry = {
-        type: type,
-        inputs: inputs,
-        result: result,
-        date: new Date().toLocaleString()
+    function getCalcLabel(type) {
+      const labels = {
+        "percent_m_m": "% m/m",
+        "percent_m_v": "% m/v",
+        "percent_v_v": "% v/v",
+        "ppm": "PPM",
+        "molarity": "M (Molaridad)",
+        "normality": "N (Normalidad)",
+        "mole_fraction": "X (Fracción molar)"
       };
-      saveHistory(entry);
+      return labels[type] || type;
+    }
+
+    function formatInputs(inputs) {
+      let formatted = "";
+      for (const key in inputs) {
+        let label = "";
+        switch(key) {
+          case "massSoluto": label = "Masa de la sustancia (g)"; break;
+          case "massTotal": label = "Masa total de la solución (g)"; break;
+          case "volumeSolution": label = "Volumen de la solución (mL o L)"; break;
+          case "volumeSoluto": label = "Volumen de la sustancia (mL)"; break;
+          case "volumeTotal": label = "Volumen total de la solución (mL)"; break;
+          case "molesSoluto": label = "Moles de la sustancia (mol)"; break;
+          case "equivalentes": label = "Equivalentes de la sustancia"; break;
+          case "molesSolvente": label = "Moles del solvente (mol)"; break;
+          default: label = key;
+        }
+        formatted += `${label}: ${inputs[key]}<br>`;
+      }
+      return formatted;
+    }
+
+    function showTutorial(type) {
+      const container = document.getElementById("tutorial");
+      container.innerHTML = "";
+      if (tutorialSteps[type]) {
+        const title = document.createElement("h3");
+        title.textContent = "📚 Tutorial Paso a Paso 📚";
+        container.appendChild(title);
+        tutorialSteps[type].forEach((step, i) => {
+          const div = document.createElement("div");
+          div.className = "tutorial-step";
+          div.innerHTML = step;
+          container.appendChild(div);
+        });
+      }
+    }
+
+    // Conversión simple de unidades con validaciones amigables
+    function convertUnits(val, fromU, toU) {
+      let number = parseFloat(val);
+      if (isNaN(number)) return "❌ Valor inválido.";
+
+      // Conversiones de masa
+      if (fromU === "kilogramos (kg)" && toU === "gramos (g)") {
+        return `${number} kg = ${number * 1000} g`;
+      }
+      if (fromU === "gramos (g)" && toU === "kilogramos (kg)") {
+        return `${number} g = ${(number / 1000).toFixed(3)} kg`;
+      }
+
+      // Conversiones de volumen
+      if (fromU === "litros (L)" && toU === "mililitros (mL)") {
+        return `${number} L = ${number * 1000} mL`;
+      }
+      if (fromU === "mililitros (mL)" && toU === "litros (L)") {
+        return `${number} mL = ${(number / 1000).toFixed(3)} L`;
+      }
+
+      // Mismas unidades
+      if (fromU === toU) {
+        return "ℹ️ Las unidades son iguales.";
+      }
+
+      // Conversiones no definidas
+      return "⚠️ Conversión no definida entre estas unidades.";
+    }
+
+    // Inicialización y manejo de eventos
+    document.addEventListener("DOMContentLoaded", () => {
+      const calcTypeSelect = document.getElementById("calcType");
+      const inputFieldsContainer = document.getElementById("inputFields");
+      const calcButton = document.getElementById("calcButton");
+      const resultContainer = document.getElementById("resultContainer");
+      const convertButton = document.getElementById("convertButton");
+
+      function updateUI() {
+        const type = calcTypeSelect.value;
+        inputFieldsContainer.innerHTML = getInputFields(type);
+        showTutorial(type);
+        resultContainer.innerHTML = "";
+      }
+
+      calcTypeSelect.addEventListener("change", updateUI);
+
+      calcButton.addEventListener("click", () => {
+        const type = calcTypeSelect.value;
+        // Tomar inputs
+        const inputs = {};
+        const fields = inputFieldsContainer.querySelectorAll("input");
+        fields.forEach(f => {
+          inputs[f.id] = f.value;
+        });
+
+        const {result, explanation} = calculate(type, inputs);
+        if (result) {
+          resultContainer.innerHTML = `
+            <div class="result">
+              <h3>✅ Resultado</h3>
+              <p>${result}</p>
+              <p><strong>📝 Explicación:</strong> ${explanation}</p>
+            </div>
+          `;
+          const entry = {
+            type: type,
+            inputs: inputs,
+            result: result,
+            date: new Date().toLocaleString()
+          };
+          saveHistory(entry);
+          updateHistoryUI();
+        } else {
+          resultContainer.innerHTML = `<div class="result">⚠️ Por favor, completa todos los campos requeridos.</div>`;
+        }
+      });
+
+      convertButton.addEventListener("click", () => {
+        const val = document.getElementById("convertValue").value;
+        const fromU = document.getElementById("fromUnit").value;
+        const toU = document.getElementById("toUnit").value;
+        const conversion = convertUnits(val, fromU, toU);
+        const conversionResult = document.getElementById("conversionResult");
+        conversionResult.innerHTML = `<p>${conversion}</p>`;
+      });
+
+      // Inicializar UI
+      updateUI();
       updateHistoryUI();
-    } else {
-      resultContainer.innerHTML = `<div class="result">Por favor, verifique los datos ingresados.</div>`;
-    }
-  });
-
-  convertButton.addEventListener("click", () => {
-    const val = document.getElementById("convertValue").value;
-    const fromU = document.getElementById("fromUnit").value;
-    const toU = document.getElementById("toUnit").value;
-    const conversion = convertUnits(val, fromU, toU);
-    const conversionResult = document.getElementById("conversionResult");
-    if (conversion === null) {
-      conversionResult.textContent = "Valor inválido.";
-    } else if (typeof conversion === "string") {
-      conversionResult.textContent = conversion;
-    } else {
-      conversionResult.textContent = `${val} ${fromU} = ${conversion} ${toU}`;
-    }
-  });
-
-  // Inicializar UI
-  updateUI();
-  updateHistoryUI();
-});
-</script>
+    });
+  </script>
 </body>
 </html>
