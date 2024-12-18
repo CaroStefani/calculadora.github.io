@@ -1,514 +1,494 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculadora de Concentraciones Químicas</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #FFFFFF; /* Fondo blanco */
+    color: #333;
+    text-align: center;
+  }
 
-    <title>Aplicación de Química - Unidades, Cálculos y Conversión</title>
+  h1, h2, h3, h4, h5 {
+    margin-top: 0.5em;
+    color: #333;
+  }
 
-    <!-- 
-    Esta página ha sido creada para cumplir con las especificaciones solicitadas:
-    Temas incluidos:
-    1. Sistema internacional de medidas (conversión de masa, volumen, distancia, densidad, presión, tiempo, fuerza, energía).
-    2. Relaciones de masa, fórmula empírica y molecular.
-    3. Balance estequiométrico de reacciones químicas (reactivo limitante, en exceso, % rendimiento, pureza).
-    4. Leyes de los gases (Cálculo de P, V, n, T).
-    5. Unidades de concentración (%m/m, %m/v, %v/v, ppm, M, N, X).
-    6. Equilibrio químico y Le Chatelier (cálculo de constantes y variables).
-    7. Ácido-Base (cálculo de pH, [H+], [OH-], para ácidos y bases fuertes/débiles).
+  label {
+    display: block;
+    margin-top: 5px;
+    font-weight: bold;
+    text-align: left; /* Mantener labels alineados a la izquierda */
+  }
 
-    Esta página está pensada para servir como herramienta de cálculo y ejemplo educativo.
-    Se incluyen secciones, cada una con explicaciones, ejemplos y formularios para el cálculo.
-    Por simplicidad, se proveerán ejemplos de interfaz; la lógica de cálculo puede implementarse posteriormente con JavaScript.
-    -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.5;
-            margin: 20px;
-        }
-        header, footer {
-            background: #f2f2f2;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        h1, h2, h3 {
-            color: #003366;
-        }
-        section {
-            margin-bottom: 40px;
-        }
-        .calculo-form {
-            border: 1px solid #ccc; 
-            padding: 15px;
-            border-radius: 5px; 
-            background: #fafafa; 
-            max-width: 600px; 
-            margin: 20px 0;
-        }
-        .calculo-form label {
-            display: block;
-            margin: 10px 0 5px;
-        }
-        .calculo-form input, 
-        .calculo-form select,
-        .calculo-form button {
-            padding: 5px;
-            font-size: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .resultado {
-            margin-top: 10px; 
-            font-weight: bold; 
-            color: #009900;
-        }
-        nav ul {
-            list-style: none;
-            padding:0;
-        }
-        nav ul li {
-            margin: 5px 0;
-        }
-        nav ul li a {
-            text-decoration: none; 
-            color: #0066cc;
-        }
-        nav ul li a:hover {
-            text-decoration: underline;
-        }
-        .ejemplo {
-            background: #eaf4ff;
-            border-left: 4px solid #0066cc;
-            padding: 10px;
-            margin: 10px 0;
-        }
-    </style>
+  input, select, button {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+    max-width: 250px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    width: auto;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    margin-top:10px;
+  }
+
+  .section {
+    margin: 10px auto; /* Menos margen, centrado */
+    padding: 10px; /* Menos padding */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    max-width: 400px; /* Limitar el ancho para que se vea más compacto */
+    text-align: left; /* Contenido alineado a la izquierda */
+  }
+
+  .section h5 {
+    text-align: center; /* Títulos centrados */
+  }
+
+  .green-box {
+    background: #ddffdd;
+  }
+
+  .blue-box {
+    background: #ddeeff;
+  }
+
+  .yellow-box {
+    background: #fffadd;
+  }
+
+  .pink-box {
+    background: #ffe4e1;
+  }
+
+  .result {
+    background: #ddffdd; /* Verde pastel */
+    border: 1px solid #b3d7ff;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    text-align:center;
+  }
+
+  .history {
+    list-style: none;
+    padding: 0;
+  }
+
+  .history li {
+    background: #FFFADD; /* Amarillo pastel */
+    margin-bottom: 5px;
+    padding: 5px; /* Menos padding */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    text-align:center;
+  }
+
+  .conversion-panel {
+    margin-top: 10px;
+  }
+
+  .tutorial-step {
+    background: #fff;
+    border: 1px solid #ccc;
+    margin-bottom:5px;
+    padding: 5px;
+    border-radius: 3px;
+  }
+
+  .flex-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* menos espacio */
+    justify-content: center; /* Centrar elementos */
+  }
+
+  .footer-message {
+    margin-top: 20px;
+    text-align: center;
+    color: #333;
+    font-style: italic;
+  }
+</style>
 </head>
 <body>
+<h1>Calculadora de Concentraciones Químicas</h1>
 
-<header>
-    <h1>Aplicación de Cálculos Químicos y Conversión de Unidades</h1>
-    <p>Esta herramienta le permitirá resolver ejercicios relacionados con diversas áreas de la química, incluyendo unidades, estequiometría, gases, equilibrio químico y cálculos ácido-base.</p>
-</header>
+<div class="section blue-box">
+  <label for="calcType" style="text-align:center;">Seleccione el tipo de cálculo:</label>
+  <select id="calcType" style="margin: 0 auto; display:block;">
+    <option value="percent_m_m">% m/m (Porcentaje masa/masa)</option>
+    <option value="percent_m_v">% m/v (Porcentaje masa/volumen)</option>
+    <option value="percent_v_v">% v/v (Porcentaje volumen/volumen)</option>
+    <option value="ppm">PPM (Partes por millón)</option>
+    <option value="molarity">M (Molaridad)</option>
+    <option value="normality">N (Normalidad)</option>
+    <option value="mole_fraction">X (Fracción molar)</option>
+  </select>
+</div>
 
-<nav>
-    <h2>Secciones</h2>
-    <ul>
-        <li><a href="#tema1">Tema 1: Sistema Internacional de Medidas</a></li>
-        <li><a href="#tema2">Tema 2: Relaciones de Masa, Fórmula Empírica y Molecular</a></li>
-        <li><a href="#tema3">Tema 3: Balance Estequiométrico de Reacciones Químicas</a></li>
-        <li><a href="#tema4">Tema 4: Leyes de los Gases</a></li>
-        <li><a href="#tema5">Tema 5: Unidades de Concentración</a></li>
-        <li><a href="#tema6">Tema 6: Equilibrio Químico y Principio de Le Chatelier</a></li>
-        <li><a href="#tema7">Tema 7: Ácido-Base (pH, [H+], [OH-])</a></li>
-    </ul>
-</nav>
+<div id="tutorial" class="section green-box" style="max-width:400px; margin:10px auto;"></div>
 
-<hr />
+<h5>Datos de entrada</h5>
+<div id="inputFields" class="section pink-box"></div>
 
-<!-- TEMA 1: Sistema Internacional de medidas -->
-<section id="tema1">
-    <h2>Tema 1: Sistema Internacional de Medidas</h2>
-    <p>En esta sección se presentan conversiones entre diferentes unidades de:</p>
-    <ul>
-        <li>Masa (Ton, Kg, g, mg, µg)</li>
-        <li>Volumen (Gal, m³, L, mL, µL)</li>
-        <li>Distancia (Yarda, pulgada, m, cm, km, mm)</li>
-        <li>Densidad (Kg/m³, g/mL, Kg/L, g/L)</li>
-        <li>Presión (mmHg, Atm, Pa, psi, Torr)</li>
-        <li>Tiempo (s, min, hora)</li>
-        <li>Fuerza (Newton, Kilonewton, Micronewton, Dina, Kilogramo-fuerza)</li>
-        <li>Energía (KJ, Kcal)</li>
-    </ul>
-    <p>A continuación un ejemplo de conversión de masas:</p>
-    <div class="calculo-form">
-        <label for="masa-valor">Valor:</label>
-        <input type="number" step="any" id="masa-valor" placeholder="Ingresa el valor a convertir" />
+<button id="calcButton">Calcular</button>
 
-        <label for="masa-origen">Unidad de Origen:</label>
-        <select id="masa-origen">
-            <option value="ton">Ton</option>
-            <option value="kg">Kg</option>
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-            <option value="ug">µg</option>
-        </select>
+<div id="resultContainer" style="max-width:400px; margin:10px auto;"></div>
 
-        <label for="masa-destino">Unidad de Destino:</label>
-        <select id="masa-destino">
-            <option value="ton">Ton</option>
-            <option value="kg">Kg</option>
-            <option value="g">g</option>
-            <option value="mg">mg</option>
-            <option value="ug">µg</option>
-        </select>
-
-        <button type="button" onclick="convertirMasa()">Convertir Masa</button>
-        <div class="resultado" id="resultado-masa"></div>
+<div class="section yellow-box conversion-panel" style="max-width:400px; margin:10px auto;">
+  <h5>Conversión de Unidades</h5>
+  <div class="flex-row">
+    <div>
+      <label>Valor:</label>
+      <input type="number" id="convertValue" placeholder="Valor"/>
     </div>
-
-    <div class="ejemplo">
-        <p><strong>Ejemplo:</strong> Convertir 2 Kg a g:</p>
-        <p>1 Kg = 1000 g, por lo tanto 2 Kg = 2 * 1000 = 2000 g.</p>
+    <div>
+      <label>De:</label>
+      <select id="fromUnit">
+        <option>gramos (g)</option>
+        <option>kilogramos (kg)</option>
+        <option>litros (L)</option>
+        <option>mililitros (mL)</option>
+      </select>
     </div>
-</section>
-
-<hr />
-
-<!-- TEMA 2: Relaciones de masa, fórmula empírica y molecular -->
-<section id="tema2">
-    <h2>Tema 2: Relaciones de Masa, Fórmula Empírica y Molecular</h2>
-    <p>Esta sección permite calcular moles, número de Avogadro, masa molar, composición porcentual, y determinar fórmulas empíricas y moleculares.</p>
-
-    <h3>Cálculo de Moles</h3>
-    <div class="calculo-form">
-        <label for="masa-molar">Masa molar (g/mol):</label>
-        <input type="number" step="any" id="masa-molar" placeholder="e.g. 18 g/mol" />
-        
-        <label for="masa-muestra">Masa de la muestra (g):</label>
-        <input type="number" step="any" id="masa-muestra" placeholder="e.g. 36 g" />
-
-        <button type="button" onclick="calcularMoles()">Calcular moles</button>
-        <div class="resultado" id="resultado-moles"></div>
+    <div>
+      <label>A:</label>
+      <select id="toUnit">
+        <option>gramos (g)</option>
+        <option>kilogramos (kg)</option>
+        <option>litros (L)</option>
+        <option>mililitros (mL)</option>
+      </select>
     </div>
+  </div>
+  <button id="convertButton">Convertir</button>
+  <div id="conversionResult" style="text-align:center; margin-top:10px;"></div>
+</div>
 
-    <div class="ejemplo">
-        <p><strong>Ejemplo:</strong> ¿Cuántos moles hay en 36 g de H<sub>2</sub>O? La masa molar del agua (H<sub>2</sub>O) es ~18 g/mol.</p>
-        <p>Moles = masa / masa molar = 36 g / 18 g/mol = 2 moles.</p>
-    </div>
+<h5 style="margin:10px;">Último cálculo realizado</h5>
+<ul class="history" id="historyList" style="max-width:400px; margin:10px auto;"></ul>
 
-    <h3>Fórmula Empírica</h3>
-    <p>Con el porcentaje de composición de cada elemento se puede determinar la fórmula empírica. Luego, con la masa molar, se puede obtener la fórmula molecular.</p>
-    <!-- En la implementación final, aquí se pondrían campos y un script para calcular la fórmula empírica -->
-</section>
-
-<hr />
-
-<!-- TEMA 3: Balance Estequiométrico -->
-<section id="tema3">
-    <h2>Tema 3: Balance Estequiométrico de Reacciones Químicas</h2>
-    <p>Esta sección permite encontrar el reactivo limitante, el reactivo en exceso, el porcentaje de rendimiento y la pureza de una reacción dada.</p>
-
-    <!-- Ejemplo de reactivo limitante -->
-    <h3>Reactivo Limitante</h3>
-    <div class="calculo-form">
-        <p><em>Suponga que la reacción es A + 2B → C. Ingrese las masas y masas molares de A y B para determinar el reactivo limitante.</em></p>
-        
-        <label>Masa A (g):</label>
-        <input type="number" step="any" id="masa-A" />
-        
-        <label>Masa molar A (g/mol):</label>
-        <input type="number" step="any" id="mm-A" />
-
-        <label>Masa B (g):</label>
-        <input type="number" step="any" id="masa-B" />
-        
-        <label>Masa molar B (g/mol):</label>
-        <input type="number" step="any" id="mm-B" />
-
-        <button type="button" onclick="calcularReactivoLimitante()">Calcular Reactivo Limitante</button>
-        <div class="resultado" id="resultado-limitante"></div>
-    </div>
-
-    <!-- Ejemplo de Porcentaje de rendimiento -->
-    <h3>Porcentaje de Rendimiento</h3>
-    <div class="calculo-form">
-        <label for="rendimiento-teorico">Rendimiento teórico (g):</label>
-        <input type="number" step="any" id="rendimiento-teorico"/>
-        
-        <label for="rendimiento-real">Rendimiento real (g):</label>
-        <input type="number" step="any" id="rendimiento-real"/>
-
-        <button type="button" onclick="calcularRendimiento()">Calcular % Rendimiento</button>
-        <div class="resultado" id="resultado-rendimiento"></div>
-    </div>
-</section>
-
-<hr />
-
-<!-- TEMA 4: Leyes de los Gases -->
-<section id="tema4">
-    <h2>Tema 4: Leyes de los Gases</h2>
-    <p>Calcula la presión, volumen, cantidad de sustancia (moles) o temperatura para una muestra de gas usando las diversas leyes (Boyle, Charles, Gay-Lussac, Gas Ideal).</p>
-
-    <h3>Gas Ideal: PV = nRT</h3>
-    <div class="calculo-form">
-        <label>Presión (atm):</label>
-        <input type="number" step="any" id="presion-gas" placeholder="e.g. 1 atm" />
-
-        <label>Volumen (L):</label>
-        <input type="number" step="any" id="volumen-gas" placeholder="e.g. 22.4 L" />
-
-        <label>Moles (n):</label>
-        <input type="number" step="any" id="moles-gas" placeholder="e.g. 1 mol" />
-
-        <label>Temperatura (K):</label>
-        <input type="number" step="any" id="temp-gas" placeholder="e.g. 273 K" />
-
-        <p><em>Deje en blanco la variable que desee calcular. Asegúrese que las otras tres estén rellenas.</em></p>
-        <button type="button" onclick="calcularGasIdeal()">Calcular Ley de Gas Ideal</button>
-        <div class="resultado" id="resultado-gas-ideal"></div>
-    </div>
-</section>
-
-<hr />
-
-<!-- TEMA 5: Unidades de Concentración -->
-<section id="tema5">
-    <h2>Tema 5: Unidades de Concentración</h2>
-    <p>Calcula %m/m, %m/v, %v/v, ppm, M (molaridad), N (normalidad) y fracción molar (X).</p>
-
-    <h3>Molaridad</h3>
-    <div class="calculo-form">
-        <label>Moles de soluto (mol):</label>
-        <input type="number" step="any" id="mol-soluto" />
-        
-        <label>Volumen de disolución (L):</label>
-        <input type="number" step="any" id="vol-disolucion" />
-
-        <button type="button" onclick="calcularMolaridad()">Calcular Molaridad</button>
-        <div class="resultado" id="resultado-molaridad"></div>
-    </div>
-
-    <div class="ejemplo">
-        <p><strong>Ejemplo:</strong> Si tienes 2 moles de NaCl disueltos en 1 L de solución, la Molaridad = 2 mol/L.</p>
-    </div>
-</section>
-
-<hr />
-
-<!-- TEMA 6: Equilibrio Químico y Le Chatelier -->
-<section id="tema6">
-    <h2>Tema 6: Equilibrio Químico y Principio de Le Chatelier</h2>
-    <p>Calcula constantes de equilibrio (Kc, Kp), concentraciones en el equilibrio, y analiza cómo cambios en concentración, presión o temperatura afectan el equilibrio según Le Chatelier.</p>
-
-    <!-- Ejemplo de cálculo de Kc: aA + bB ⇌ cC + dD -->
-    <h3>Cálculo de la Constante de Equilibrio (Kc)</h3>
-    <div class="calculo-form">
-        <p><em>Ingrese las concentraciones molares en equilibrio de cada especie.</em></p>
-        <label>[A]eq (mol/L):</label>
-        <input type="number" step="any" id="A-eq" />
-        <label>[B]eq (mol/L):</label>
-        <input type="number" step="any" id="B-eq" />
-        <label>[C]eq (mol/L):</label>
-        <input type="number" step="any" id="C-eq" />
-        <label>[D]eq (mol/L):</label>
-        <input type="number" step="any" id="D-eq" />
-
-        <!-- En un caso real, se solicitaría también la estequiometría (a, b, c, d) 
-             para calcular Kc = ([C]^c [D]^d)/([A]^a [B]^b). -->
-        <button type="button" onclick="calcularKc()">Calcular Kc (Ejemplo genérico)</button>
-        <div class="resultado" id="resultado-Kc"></div>
-    </div>
-</section>
-
-<hr />
-
-<!-- TEMA 7: Ácido-Base -->
-<section id="tema7">
-    <h2>Tema 7: Ácido-Base (pH, [H+], [OH-])</h2>
-    <p>Calcula el pH, la concentración de protones [H+] y de iones hidroxilo [OH-] para ácidos y bases fuertes o débiles. Permite cálculos dados Ka o Kb.</p>
-
-    <h3>Cálculo de pH a partir de [H+]</h3>
-    <div class="calculo-form">
-        <label>[H+] (mol/L):</label>
-        <input type="number" step="any" id="Hplus" placeholder="e.g. 0.001 mol/L" />
-
-        <button type="button" onclick="calcularpH()">Calcular pH</button>
-        <div class="resultado" id="resultado-pH"></div>
-    </div>
-
-    <div class="ejemplo">
-        <p><strong>Ejemplo:</strong> Si [H+] = 0.001 mol/L = 1x10<sup>-3</sup> M, entonces pH = -log(1x10<sup>-3</sup>) = 3.</p>
-    </div>
-</section>
-
-<footer>
-    <p>Desarrollado por: Carolina - Daniela </p>
-    <p>Química</p>
-</footer>
+<p class="footer-message">Trabajo desarrollado por Daniela Torreblanca y Carlolina Martínez</p>
 
 <script>
-    // Ejemplo de función para conversión de masa (Tema 1)
-    function convertirMasa() {
-        const valor = parseFloat(document.getElementById('masa-valor').value);
-        const origen = document.getElementById('masa-origen').value;
-        const destino = document.getElementById('masa-destino').value;
+// Tutoriales para cada tipo de cálculo
+const tutorialSteps = {
+  "percent_m_m": [
+    "Seleccionar % m/m.",
+    "Ingrese la masa del soluto (g) y la masa total (g).",
+    "Fórmula: (masa soluto / masa total)*100."
+  ],
+  "percent_m_v": [
+    "Seleccionar % m/v.",
+    "Ingrese la masa del soluto (g) y el volumen de la solución (mL).",
+    "Fórmula: %m/v = (masa soluto (g)/volumen disolución (mL))*100%."
+  ],
+  "percent_v_v": [
+    "Seleccionar % v/v.",
+    "Ingrese volumen del soluto y volumen total.",
+    "Fórmula: (volumen soluto / volumen total)*100."
+  ],
+  "ppm": [
+    "Seleccionar PPM.",
+    "Ingrese la masa del soluto (g) y la masa total (g).",
+    "Fórmula: (masa soluto/masa total)*10^6."
+  ],
+  "molarity": [
+    "Seleccionar Molaridad (M).",
+    "Ingrese moles de soluto (mol) y volumen de la solución (L).",
+    "Fórmula: M = moles de soluto / L disolución."
+  ],
+  "normality": [
+    "Seleccionar Normalidad (N).",
+    "Ingrese equivalentes del soluto y volumen (L) de la solución.",
+    "Fórmula: N = equivalentes soluto / L solución."
+  ],
+  "mole_fraction": [
+    "Seleccionar Fracción molar (X).",
+    "Ingrese moles soluto y moles solvente.",
+    "X = moles soluto / (moles soluto + moles solvente)."
+  ]
+};
 
-        // Factores de conversión a gramos:
-        const factor = {
-            'ton': 1e6,  // 1 ton = 1,000,000 g (suponiendo Ton métrica)
-            'kg' : 1000,
-            'g'  : 1,
-            'mg' : 0.001,
-            'ug' : 0.000001
-        };
+// Opciones de input dinámico según el tipo de cálculo
+function getInputFields(type) {
+  switch(type) {
+    case "percent_m_m":
+      return `
+        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
+        <label>Masa total de la solución (g): <input type="number" id="massTotal" /></label>
+      `;
+    case "percent_m_v":
+      return `
+        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
+        <label>Volumen de la solución (mL): <input type="number" id="volumeSolution" /></label>
+      `;
+    case "percent_v_v":
+      return `
+        <label>Volumen del soluto: <input type="number" id="volumeSoluto" /></label>
+        <label>Volumen total de la solución: <input type="number" id="volumeTotal" /></label>
+      `;
+    case "ppm":
+      return `
+        <label>Masa del soluto (g): <input type="number" id="massSoluto" /></label>
+        <label>Masa total (g): <input type="number" id="massTotal" /></label>
+      `;
+    case "molarity":
+      return `
+        <label>Moles de soluto (mol): <input type="number" id="molesSoluto" /></label>
+        <label>Volumen de la solución (L): <input type="number" id="volumeSolution" /></label>
+      `;
+    case "normality":
+      return `
+        <label>Equivalentes del soluto: <input type="number" id="equivalentes" /></label>
+        <label>Volumen de la solución (L): <input type="number" id="volumeSolution" /></label>
+      `;
+    case "mole_fraction":
+      return `
+        <label>Moles de soluto (mol): <input type="number" id="molesSoluto" /></label>
+        <label>Moles de solvente (mol): <input type="number" id="molesSolvente" /></label>
+      `;
+    default:
+      return "";
+  }
+}
 
-        if (isNaN(valor)) {
-            document.getElementById('resultado-masa').textContent = "Por favor ingresa un valor numérico.";
-            return;
-        }
+// Cálculos
+function calculate(type, inputs) {
+  let result = null;
+  let explanation = "";
+  const n = Number;
 
-        // Convertir a gramos:
-        const enGramos = valor * factor[origen];
-        // Convertir a unidad destino:
-        const resultado = enGramos / factor[destino];
+  switch(type) {
+    case "percent_m_m":
+      if (inputs.massSoluto && inputs.massTotal) {
+        const val = (n(inputs.massSoluto)/n(inputs.massTotal))*100;
+        result = val.toFixed(4) + " % m/m";
+        explanation = "Porcentaje masa/masa = (masa soluto / masa total)*100.";
+      }
+      break;
+    case "percent_m_v":
+      if (inputs.massSoluto && inputs.volumeSolution) {
+        const val = (n(inputs.massSoluto)/n(inputs.volumeSolution))*100;
+        result = val.toFixed(4) + " % m/v";
+        explanation = "% m/v = (g soluto/mL solución)*100.";
+      }
+      break;
+    case "percent_v_v":
+      if (inputs.volumeSoluto && inputs.volumeTotal) {
+        const val = (n(inputs.volumeSoluto)/n(inputs.volumeTotal))*100;
+        result = val.toFixed(4) + " % v/v";
+        explanation = "% v/v = (volumen soluto/volumen total)*100.";
+      }
+      break;
+    case "ppm":
+      if (inputs.massSoluto && inputs.massTotal) {
+        const val = (n(inputs.massSoluto)/n(inputs.massTotal))*1_000_000;
+        result = val.toFixed(4) + " ppm";
+        explanation = "PPM = (masa soluto/masa total)*10^6.";
+      }
+      break;
+    case "molarity":
+      if (inputs.molesSoluto && inputs.volumeSolution) {
+        const val = n(inputs.molesSoluto)/n(inputs.volumeSolution);
+        result = val.toFixed(4) + " M";
+        explanation = "M = moles de soluto / L disolución.";
+      }
+      break;
+    case "normality":
+      if (inputs.equivalentes && inputs.volumeSolution) {
+        const val = n(inputs.equivalentes)/n(inputs.volumeSolution);
+        result = val.toFixed(4) + " N";
+        explanation = "N = equivalentes soluto / L solución.";
+      }
+      break;
+    case "mole_fraction":
+      if (inputs.molesSoluto && inputs.molesSolvente) {
+        const val = n(inputs.molesSoluto)/(n(inputs.molesSoluto)+n(inputs.molesSolvente));
+        result = val.toFixed(4);
+        explanation = "Fracción molar = moles soluto/(moles soluto + moles solvente).";
+      }
+      break;
+  }
 
-        document.getElementById('resultado-masa').textContent = 
-            `${valor} ${origen} = ${resultado} ${destino}`;
+  return {result, explanation};
+}
+
+// Manejo de historial en localStorage
+function loadHistory() {
+  let hist = localStorage.getItem("lastCalculation");
+  return hist ? JSON.parse(hist) : null;
+}
+
+function saveHistory(entry) {
+  // Guardamos sólo el último cálculo
+  localStorage.setItem("lastCalculation", JSON.stringify(entry));
+}
+
+function updateHistoryUI() {
+  const h = loadHistory();
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+  if (h) {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>${getCalcLabel(h.type)}</strong> (${h.date})<br>Inputs: ${JSON.stringify(h.inputs)}<br>Resultado: ${h.result}`;
+    list.appendChild(li);
+  }
+}
+
+function getCalcLabel(type) {
+  const labels = {
+    "percent_m_m": "% m/m",
+    "percent_m_v": "% m/v",
+    "percent_v_v": "% v/v",
+    "ppm": "PPM",
+    "molarity": "M",
+    "normality": "N",
+    "mole_fraction": "X (Fracción molar)"
+  };
+  return labels[type] || type;
+}
+
+function showTutorial(type) {
+  const container = document.getElementById("tutorial");
+  container.innerHTML = "";
+  if (tutorialSteps[type]) {
+    if (tutorialSteps[type].length > 0) {
+      const title = document.createElement("h5");
+      title.textContent = "Tutorial Interactivo";
+      title.style.textAlign = "center";
+      container.appendChild(title);
     }
+    tutorialSteps[type].forEach((step, i) => {
+      const div = document.createElement("div");
+      div.className = "tutorial-step";
+      div.textContent = "Paso " + (i+1) + ": " + step;
+      container.appendChild(div);
+    });
+  }
+}
 
-    // Ejemplo de función para cálculo de moles (Tema 2)
-    function calcularMoles() {
-        const mm = parseFloat(document.getElementById('masa-molar').value);
-        const masa = parseFloat(document.getElementById('masa-muestra').value);
-        
-        if (isNaN(mm) || isNaN(masa) || mm <= 0) {
-            document.getElementById('resultado-moles').textContent = "Por favor ingrese valores válidos.";
-            return;
-        }
+// Manejo de conversión simple
+function convertUnits(val, fromU, toU) {
+  let number = parseFloat(val);
+  if (isNaN(number)) return null;
 
-        const moles = masa / mm;
-        document.getElementById('resultado-moles').textContent = 
-            `Número de moles = ${moles.toFixed(4)} mol`;
+  if (fromU.includes("kilogramos")) {
+    number = number * 1000; // a g
+  } else if (fromU.includes("gramos")) {
+    // ya está en g
+  } else if (fromU.includes("litros")) {
+    // ya está en L
+  } else if (fromU.includes("mililitros")) {
+    number = number / 1000; // a L
+  }
+
+  if (toU.includes("kilogramos")) {
+    if (fromU.includes("litros") || fromU.includes("mililitros")) {
+      return "Conversión no definida entre volumen y masa sin densidad";
     }
-
-    // Ejemplo de función para reactivo limitante (Tema 3)
-    // Reacción: A + 2B → C (ejemplo)
-    function calcularReactivoLimitante() {
-        const masaA = parseFloat(document.getElementById('masa-A').value);
-        const mmA = parseFloat(document.getElementById('mm-A').value);
-        const masaB = parseFloat(document.getElementById('masa-B').value);
-        const mmB = parseFloat(document.getElementById('mm-B').value);
-
-        if ( [masaA, mmA, masaB, mmB].some(v=> isNaN(v) || v<=0) ) {
-            document.getElementById('resultado-limitante').textContent = "Ingrese datos válidos.";
-            return;
-        }
-
-        const molesA = masaA / mmA;
-        const molesB = masaB / mmB;
-
-        // Según la reacción A + 2B, la relación molar es:
-        // Se necesitan 2 moles de B por cada mol de A.
-        
-        if ( (molesB < 2*molesA) ) {
-            document.getElementById('resultado-limitante').textContent = "El reactivo limitante es B.";
-        } else {
-            document.getElementById('resultado-limitante').textContent = "El reactivo limitante es A.";
-        }
+    number = number / 1000; // g a kg
+  } else if (toU.includes("gramos")) {
+    if (fromU.includes("litros") || fromU.includes("mililitros")) {
+      return "Conversión no definida entre volumen y masa sin densidad";
     }
-
-    // Ejemplo de función para rendimiento (Tema 3)
-    function calcularRendimiento() {
-        const teorico = parseFloat(document.getElementById('rendimiento-teorico').value);
-        const real = parseFloat(document.getElementById('rendimiento-real').value);
-
-        if (isNaN(teorico) || isNaN(real) || teorico <= 0) {
-            document.getElementById('resultado-rendimiento').textContent = "Ingrese datos válidos.";
-            return;
-        }
-
-        const rendimiento = (real / teorico) * 100;
-        document.getElementById('resultado-rendimiento').textContent = 
-            `El porcentaje de rendimiento es ${rendimiento.toFixed(2)}%`;
+    // ya es g
+  } else if (toU.includes("litros")) {
+    if (fromU.includes("gramos") || fromU.includes("kilogramos")) {
+      return "Conversión no definida entre masa y volumen sin densidad";
     }
-
-    // Ejemplo de función Ley de Gas Ideal (Tema 4)
-    // PV = nRT, R = 0.082057 L·atm/(mol·K)
-    function calcularGasIdeal() {
-        const P = parseFloat(document.getElementById('presion-gas').value);
-        const V = parseFloat(document.getElementById('volumen-gas').value);
-        const n = parseFloat(document.getElementById('moles-gas').value);
-        const T = parseFloat(document.getElementById('temp-gas').value);
-        const R = 0.082057;
-
-        // Determinar cual variable falta (está vacía) y resolver
-        const datos = {P, V, n, T};
-        const vacios = Object.values(datos).filter(v=>isNaN(v));
-        if (vacios.length !== 1) {
-            document.getElementById('resultado-gas-ideal').textContent = 
-                "Debe dejar exactamente una variable vacía para calcular.";
-            return;
-        }
-
-        // Si falta P: P = nRT/V
-        if (isNaN(P) && !isNaN(V) && !isNaN(n) && !isNaN(T)) {
-            const presion = (n*R*T)/V;
-            document.getElementById('resultado-gas-ideal').textContent = 
-                `P = ${presion.toFixed(3)} atm`;
-        } 
-        // Si falta V: V = nRT/P
-        else if (!isNaN(P) && isNaN(V) && !isNaN(n) && !isNaN(T)) {
-            const volumen = (n*R*T)/P;
-            document.getElementById('resultado-gas-ideal').textContent = 
-                `V = ${volumen.toFixed(3)} L`;
-        } 
-        // Si falta n: n = PV/(RT)
-        else if (!isNaN(P) && !isNaN(V) && isNaN(n) && !isNaN(T)) {
-            const moles = (P*V)/(R*T);
-            document.getElementById('resultado-gas-ideal').textContent = 
-                `n = ${moles.toFixed(3)} mol`;
-        } 
-        // Si falta T: T = PV/(nR)
-        else if (!isNaN(P) && !isNaN(V) && !isNaN(n) && isNaN(T)) {
-            const temp = (P*V)/(n*R);
-            document.getElementById('resultado-gas-ideal').textContent = 
-                `T = ${temp.toFixed(3)} K`;
-        } else {
-            document.getElementById('resultado-gas-ideal').textContent = 
-                "Datos insuficientes o demasiadas variables vacías.";
-        }
+    // ya es L
+  } else if (toU.includes("mililitros")) {
+    if (fromU.includes("gramos") || fromU.includes("kilogramos")) {
+      return "Conversión no definida entre masa y volumen sin densidad";
     }
+    number = number * 1000; // L a mL
+  }
 
-    // Ejemplo de función Molaridad (Tema 5)
-    function calcularMolaridad() {
-        const mol = parseFloat(document.getElementById('mol-soluto').value);
-        const vol = parseFloat(document.getElementById('vol-disolucion').value);
+  return number;
+}
 
-        if (isNaN(mol) || isNaN(vol) || vol <= 0) {
-            document.getElementById('resultado-molaridad').textContent = "Datos inválidos.";
-            return;
-        }
 
-        const M = mol / vol;
-        document.getElementById('resultado-molaridad').textContent = 
-            `Molaridad = ${M.toFixed(3)} mol/L`;
+// Inicialización
+document.addEventListener("DOMContentLoaded", () => {
+  const calcTypeSelect = document.getElementById("calcType");
+  const inputFieldsContainer = document.getElementById("inputFields");
+  const calcButton = document.getElementById("calcButton");
+  const resultContainer = document.getElementById("resultContainer");
+  const convertButton = document.getElementById("convertButton");
+
+  function updateUI() {
+    const type = calcTypeSelect.value;
+    inputFieldsContainer.innerHTML = getInputFields(type);
+    showTutorial(type);
+    resultContainer.innerHTML = "";
+  }
+
+  calcTypeSelect.addEventListener("change", updateUI);
+
+  calcButton.addEventListener("click", () => {
+    const type = calcTypeSelect.value;
+    // Tomar inputs
+    const inputs = {};
+    const fields = inputFieldsContainer.querySelectorAll("input");
+    fields.forEach(f => {
+      inputs[f.id] = f.value;
+    });
+
+    const {result, explanation} = calculate(type, inputs);
+    if (result) {
+      resultContainer.innerHTML = `
+        <div class="result">
+          <h5>Resultado</h5>
+          <p>${result}</p>
+          <p><b>Explicación:</b> ${explanation}</p>
+        </div>
+      `;
+      const entry = {
+        type: type,
+        inputs: inputs,
+        result: result,
+        date: new Date().toLocaleString()
+      };
+      saveHistory(entry);
+      updateHistoryUI();
+    } else {
+      resultContainer.innerHTML = `<div class="result">Por favor, verifique los datos ingresados.</div>`;
     }
+  });
 
-    // Ejemplo de función Kc (Tema 6, ejemplo genérico)
-    // Supongamos reacción genérica aA + bB ⇌ cC + dD
-    // Kc = ([C]^c [D]^d)/([A]^a [B]^b)
-    // Para simplicidad: a = b = c = d = 1 (ejemplo simple)
-    function calcularKc() {
-        const Aeq = parseFloat(document.getElementById('A-eq').value);
-        const Beq = parseFloat(document.getElementById('B-eq').value);
-        const Ceq = parseFloat(document.getElementById('C-eq').value);
-        const Deq = parseFloat(document.getElementById('D-eq').value);
-
-        if ([Aeq, Beq, Ceq, Deq].some(v=> isNaN(v) || v<0)) {
-            document.getElementById('resultado-Kc').textContent = "Datos inválidos.";
-            return;
-        }
-
-        // Ejemplo con a=b=c=d=1:
-        const Kc = (Ceq * Deq) / (Aeq * Beq);
-        document.getElementById('resultado-Kc').textContent = 
-            `Kc = ${Kc.toFixed(3)}`;
+  convertButton.addEventListener("click", () => {
+    const val = document.getElementById("convertValue").value;
+    const fromU = document.getElementById("fromUnit").value;
+    const toU = document.getElementById("toUnit").value;
+    const conversion = convertUnits(val, fromU, toU);
+    const conversionResult = document.getElementById("conversionResult");
+    if (conversion === null) {
+      conversionResult.textContent = "Valor inválido.";
+    } else if (typeof conversion === "string") {
+      conversionResult.textContent = conversion;
+    } else {
+      conversionResult.textContent = `${val} ${fromU} = ${conversion} ${toU}`;
     }
+  });
 
-    // Ejemplo de función para pH (Tema 7)
-    function calcularpH() {
-        const Hplus = parseFloat(document.getElementById('Hplus').value);
-        if (isNaN(Hplus) || Hplus <= 0) {
-            document.getElementById('resultado-pH').textContent = "Ingrese un valor positivo para [H+].";
-            return;
-        }
-
-        const pH = -Math.log10(Hplus);
-        document.getElementById('resultado-pH').textContent = `pH = ${pH.toFixed(2)}`;
-    }
+  // Inicializar UI
+  updateUI();
+  updateHistoryUI();
+});
 </script>
 </body>
 </html>
